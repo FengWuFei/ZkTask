@@ -1,7 +1,36 @@
-import TaskKit
 import Foundation
+import CommandLineKit
+import Rainbow
+import TaskKit
 
-let filePath = detectDirectory() + "config.json"
+let cli = CommandLineKit.CommandLine()
+cli.formatOutput = { str, type in
+    var string: String
+    switch(type) {
+    case .error:
+        string = str.red.bold
+    case .optionFlag:
+        string = str.green
+    case .optionHelp:
+        string = str.lightMagenta
+    default:
+        string = str
+    }
+    return cli.defaultFormat(s: string, type: type)
+}
+
+let path = StringOption(shortFlag: "p", longFlag: "Path", required: true,
+                        helpMessage: "config 文件地址")
+cli.addOptions(path)
+
+do {
+    try cli.parse()
+} catch {
+    cli.printUsage(error)
+    exit(EX_USAGE)
+}
+
+let filePath = path.value!
 let fileUrl = URL(fileURLWithPath: filePath)
 let fileData = try! Data(contentsOf: fileUrl)
 let manager = TaskManager.shared
