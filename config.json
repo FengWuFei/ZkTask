@@ -1,0 +1,27 @@
+{
+    "taskType": 0,
+    "executablePath": "/usr/local/bin/ffmpeg",
+    "quality": 33,
+    "template": [
+        {
+            "identifier": "rtmp_push",
+            "arguments": [
+                "-codec", "copy",
+                "-bsf:a", "aac_adtstoasc",
+                "-f", "flv"
+            ]
+        }
+    ],
+    "tasks": [
+       {
+           "type": "rtmp_push",
+           "inputUrl": ["udp://225.1.10.1-5:2000"],
+           "outputUrl": "rtmp://10.15.100.224/live/swift"
+       },
+       {
+            "type": "rtmp_push",
+            "inputUrl": ["udp://225.1.10.6:2000"],
+            "outputUrl": "rtmp://10.15.100.224/live/test"
+        }
+    ]
+}

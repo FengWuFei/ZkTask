@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "TaskKit",
+        "repositoryURL": "https://github.com/FengWuFei/TaskKit.git",
+        "state": {
+          "branch": null,
+          "revision": "3c73825ee2ba7c5ee60bd3c2d0e39c6e696e2493",
+          "version": "1.1.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
