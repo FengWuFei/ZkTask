@@ -15,9 +15,6 @@ class AnyFFmpegTask: Task {
     }
 }
 
-extension TaskType: Codable {}
-extension QualityOfService: Codable {}
-
 struct TaskTemplate: Codable {
     var identifier: String
     var arguments: [String]
@@ -30,10 +27,10 @@ struct TaskInfo: Codable {
 }
 
 struct Config: Codable {
-    var taskType: TaskType?
+    var taskType: String?
     var executablePath: String?
     var directoryPath: String?
-    var quality: QualityOfService?
+    var quality: String?
     var template: [TaskTemplate]
     var tasks: [TaskInfo]
     
@@ -68,17 +65,33 @@ struct Config: Codable {
             }
             
             var ffmpegOption: TaskOptionsInfo = []
-            if let ffmpegTaskType = taskType {
-                ffmpegOption.append(.taskType(ffmpegTaskType))
+            var ffmpegTaskType: TaskType = .forever
+            var ffmpgeQuality: QualityOfService = .default
+            if taskType == "disposable" {
+                ffmpegTaskType = .disposable
             }
+            if let qualityStr = quality {
+                switch qualityStr {
+                case "userInteractive":
+                    ffmpgeQuality = .userInteractive
+                case "userInitiated":
+                    ffmpgeQuality = .userInitiated
+                case "utility":
+                    ffmpgeQuality = .utility
+                case "background":
+                    ffmpgeQuality = .background
+                case "default":
+                    ffmpgeQuality = .default
+                default:
+                    break
+                }
+            }
+            ffmpegOption += [.taskType(ffmpegTaskType), .quality(ffmpgeQuality)]
             if let ffmpegExecutablePath = executablePath {
                 ffmpegOption.append(.executablePath(ffmpegExecutablePath))
             }
             if let ffmpegDirectoryPath = directoryPath {
                 ffmpegOption.append(.directoryPath(ffmpegDirectoryPath))
-            }
-            if let ffmpgeQuality = quality {
-                ffmpegOption.append(.quality(ffmpgeQuality))
             }
             
             var index = 1
